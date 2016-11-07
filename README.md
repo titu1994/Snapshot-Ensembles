@@ -12,7 +12,7 @@ The repeated rapid convergence is realized using cosine annealing cycles as the 
 This scheduler provides a learning rate which is similar to the below image. Note that the learning rate never actually becomes 0, it just gets very close to it (~0.0005): <br>
 <img src='https://github.com/titu1994/Snapshot-Ensembles/blob/master/images/cosing%20wave.png?raw=true' width=75% height=75%>
 
-The theory behind using a learning rate schedule which occilates between such extreme values (0.1 to 1e-3 in M iterations) is that there exist multiple local minima when training a model. Constantly reducing the local learning rate can force the model to be stuck at a less than optimal local minima. To escape, we attempt to use a sudden, very large learning rate to escape the current local minima and attempt to find another one.
+The theory behind using a learning rate schedule which occilates between such extreme values (0.1 to 5e-4, M times) is that there exist multiple local minima when training a model. Constantly reducing the local learning rate can force the model to be stuck at a less than optimal local minima. Therefore, to escape, we use a very large learning rate to escape the current local minima and attempt to find another possibly better local minima.
 
 It can be properly described using the following image:<br>
 <img src='https://github.com/titu1994/Snapshot-Ensembles/blob/master/images/local%20minima.JPG?raw=true'>
