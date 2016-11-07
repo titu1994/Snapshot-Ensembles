@@ -45,7 +45,7 @@ model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")
 
 hist = model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
-                   callbacks=snapshot.get_callbacks('WRN-CIFAR10-16-4'), # Build snapshot callbacks
+                   callbacks=snapshot.get_callbacks(model_prefix='WRN-CIFAR10-16-4'), # Build snapshot callbacks
                    validation_data=(testX, testY),
                    nb_val_samples=testX.shape[0])
 
