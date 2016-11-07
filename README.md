@@ -27,13 +27,13 @@ The paper uses several models such as ResNet-101, Wide Residual Network and Dens
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
 3. Run the `predict_cifar_10.py` script to make an ensemble prediction.
 
-Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.79 % accuracy). Note that you can comment the `prediction_weights[0] = 2` line, since that follows the original paper's methodology for ensemble prediction. However this reduces the accuracy of the model (92.77 %). The difference is minor, but still an improvement. 
+Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.79 % accuracy). You can comment the `prediction_weights[0] = 2` line, since that follows the original paper's methodology for ensemble prediction. However this reduces the accuracy of the model (92.77 %). The difference is minor, but still an improvement. 
 
 The improvement is minor due to the fact that the model is far smaller than the WRN-34-4 model, nor is it trained on the CIFAR-100 or Tiny ImageNet dataset. According to the paper, models trained on more complex datasets such as CIFAR 100 and Tiny ImageNet obtaines a greater boost from the ensemble model.
 
 # Requirements
 
-- Keras 1.1.1
-- Theano (tested) / Tensorflow (not tested, weights not available)
+- Keras
+- Theano (tested) / Tensorflow (not tested, weights not available but can be converted)
 - h5py
 - sklearn
