@@ -23,6 +23,8 @@ Figure 1: Left: Illustration of SGD optimization with a typical learning rate sc
 
 The paper uses several models such as ResNet-101, Wide Residual Network and DenseNet-40 and DenseNet-100. While DenseNets are the highest performing models in the paper, they are too large and take extremely long to train. Therefore, the current trained model is the Wide Residual Net (16-4) setting. This model performs poorly compared to the 34-4 version but trains several times faster.
 
+The technique is simple to implement in Keras, using a custom callback. These callbacks can be built using the `SnapshotCallbackBuilder` class in `snapshot.py`. Other models can simply use this callback builder to other models to train them in a similar manner.
+
 1. Download the 6 WRN-16-4 weights that are provided in the Release tab of the project and place them in the `weights` directory
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
 3. Run the `predict_cifar_10.py` script to make an ensemble prediction.
