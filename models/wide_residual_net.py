@@ -5,10 +5,13 @@ Code from my Wide Residual Network repository : https://github.com/titu1994/Wide
 from keras.layers import merge, Activation, Dropout, Flatten, Dense
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.layers.normalization import BatchNormalization
+from keras import backend as K
+
+channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
 def initial_conv(input):
     x = Convolution2D(16, 3, 3, border_mode='same')(input)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
     return x
 
@@ -20,13 +23,13 @@ def conv1_block(input, k=1, dropout=0.0):
         init = Convolution2D(16 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(16 * k, 3, 3, border_mode='same')(input)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     if dropout > 0.0: x = Dropout(dropout)(x)
 
     x = Convolution2D(16 * k, 3, 3, border_mode='same')(x)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     m = merge([init, x], mode='sum')
@@ -40,13 +43,13 @@ def conv2_block(input, k=1, dropout=0.0):
         init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(32 * k, 3, 3, border_mode='same')(input)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     if dropout > 0.0: x = Dropout(dropout)(x)
 
     x = Convolution2D(32 * k, 3, 3, border_mode='same')(x)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     m = merge([init, x], mode='sum')
@@ -60,13 +63,13 @@ def conv3_block(input, k=1, dropout=0.0):
         init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(64 * k, 3, 3, border_mode='same')(input)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     if dropout > 0.0: x = Dropout(dropout)(x)
 
     x = Convolution2D(64 * k, 3, 3, border_mode='same')(x)
-    x = BatchNormalization(axis=1)(x)
+    x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
 
     m = merge([init, x], mode='sum')
