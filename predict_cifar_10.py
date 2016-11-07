@@ -1,7 +1,6 @@
 import numpy as np
 import sklearn.metrics as metrics
 from models import wide_residual_net as wrn
-import h5py
 
 from keras.layers import Input
 from keras.models import Model
