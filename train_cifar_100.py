@@ -12,7 +12,7 @@ from snapshot import SnapshotCallbackBuilder
 from models import wide_residual_net as wrn
 
 ''' Snapshot major parameters '''
-M = 5 # number of snapshots
+M = 4 # number of snapshots
 nb_epoch = T = 200 # number of epochs
 alpha_zero = 0.1 # initial learning rate
 
@@ -29,7 +29,7 @@ testX = testX.astype('float32')
 testX /= 255.0
 
 trainY = kutils.to_categorical(trainY)
-testY = kutils.to_categorical(testY)
+testY_cat = kutils.to_categorical(testY)
 
 generator = ImageDataGenerator(rotation_range=15,
                                width_shift_range=5./32,
@@ -45,9 +45,9 @@ model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")
 
 hist = model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
-                   callbacks=snapshot.get_callbacks(model_prefix='WRN-CIFAR100-16-4'), # Build snapshot callbacks
-                   validation_data=(testX, testY),
-                   nb_val_samples=testX.shape[0])
+                           callbacks=snapshot.get_callbacks(model_prefix='WRN-CIFAR100-16-4'),  # Build snapshot callbacks
+                   validation_data=(testX, testY_cat),
+                           nb_val_samples=testX.shape[0])
 
 with open('WRN-CIFAR100-16-4 training.json', mode='w') as f:
     json.dump(hist.history, f)
