@@ -1,6 +1,6 @@
 # Weights 
 
-The weights for this model are available in the < href="https://github.com/titu1994/Snapshot-Ensembles/releases">releases of this project</a>. Please download all weight files and place 
+The weights for this model are available in the <a href="https://github.com/titu1994/Snapshot-Ensembles/releases">releases of this project</a>. Please download all weight files and place 
 them in this folder.
 
 Weight File Names :
