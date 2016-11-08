@@ -3,7 +3,7 @@ import numpy as np
 import sklearn.metrics as metrics
 
 import keras.utils.np_utils as kutils
-from keras.datasets import cifar10
+from keras.datasets import cifar100
 from keras.layers import Input
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
@@ -21,7 +21,7 @@ snapshot = SnapshotCallbackBuilder(T, M, alpha_zero)
 batch_size = 128
 img_rows, img_cols = 32, 32
 
-(trainX, trainY), (testX, testY) = cifar10.load_data()
+(trainX, trainY), (testX, testY) = cifar100.load_data()
 
 trainX = trainX.astype('float32')
 trainX /= 255.0
@@ -39,17 +39,17 @@ generator = ImageDataGenerator(rotation_range=15,
 generator.fit(trainX, seed=0, augment=True)
 
 init = Input(shape=(3, img_rows, img_cols))
-wrn_model = wrn.create_wide_residual_network(init, nb_classes=10, N=2, k=4, dropout=0.00)
+wrn_model = wrn.create_wide_residual_network(init, nb_classes=100, N=2, k=4, dropout=0.00)
 model = Model(input=init, output=wrn_model)
 model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")
 
 hist = model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
-                   callbacks=snapshot.get_callbacks(model_prefix='WRN-CIFAR10-16-4'), # Build snapshot callbacks
+                   callbacks=snapshot.get_callbacks(model_prefix='WRN-CIFAR100-16-4'), # Build snapshot callbacks
                    validation_data=(testX, testY),
                    nb_val_samples=testX.shape[0])
 
-with open('WRN-CIDAR10-16-4 training.json', mode='w') as f:
+with open('WRN-CIFAR100-16-4 training.json', mode='w') as f:
     json.dump(hist.history, f)
 
 yPreds = model.predict(testX)
