@@ -34,7 +34,7 @@ testY = kutils.to_categorical(testY)
 generator = ImageDataGenerator(rotation_range=15,
                                width_shift_range=5./32,
                                height_shift_range=5./32,
-                               horizontal_flip=True)
+                               horizontal_flip=False)
 
 generator.fit(trainX, seed=0, augment=True)
 
