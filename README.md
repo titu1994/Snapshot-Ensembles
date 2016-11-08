@@ -31,9 +31,16 @@ The technique is simple to implement in Keras, using a custom callback. These ca
 
 You can set attributes to the predict scripts, such as `--optimize=1` to optimize the ensemble weights, or `--num_tests` to change the default number of tests to perform.
 
-Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.79 % accuracy). The difference is minor, but still an improvement. 
+Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.84 % accuracy). The difference is minor, but still an improvement. 
 
 The improvement is minor due to the fact that the model is far smaller than the WRN-34-4 model, nor is it trained on the CIFAR-100 or Tiny ImageNet dataset. According to the paper, models trained on more complex datasets such as CIFAR 100 and Tiny ImageNet obtaines a greater boost from the ensemble model.
+
+# Performance
+- Single Best: Describes the performance of the single best model.
+- Without Optimization: Describes the performance of the ensemble model with equal weights for all models
+- With Optimization: Describes the performance of the ensemble model with optimized weights found via minimization of log-loss scores
+
+<img src='https://github.com/titu1994/Snapshot-Ensembles/blob/master/images/classification_scores.JPG?raw=true' width=100%>
 
 # Requirements
 
