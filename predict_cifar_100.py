@@ -11,7 +11,7 @@ from keras.models import Model
 from keras.datasets import cifar100
 import keras.utils.np_utils as kutils
 
-parser = argparse.ArgumentParser(description='CIFAR 10 Ensemble Prediction')
+parser = argparse.ArgumentParser(description='CIFAR 100 Ensemble Prediction')
 
 parser.add_argument('--optimize', type=int, default=0, help='Optimization flag. Set to 1 to perform a randomized '
                                                             'search to maximise classification accuracy')
