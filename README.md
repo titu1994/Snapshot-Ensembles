@@ -29,11 +29,24 @@ The technique is simple to implement in Keras, using a custom callback. These ca
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
 3. Run the `predict_cifar_10.py` script to make an ensemble prediction. 
 
-You can set attributes to the predict scripts, such as `--optimize=1` to optimize the ensemble weights, or `--num_tests` to change the default number of tests to perform.
-
 Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.84 % accuracy). The difference is minor, but still an improvement. 
 
 The improvement is minor due to the fact that the model is far smaller than the WRN-34-4 model, nor is it trained on the CIFAR-100 or Tiny ImageNet dataset. According to the paper, models trained on more complex datasets such as CIFAR 100 and Tiny ImageNet obtaines a greater boost from the ensemble model.
+
+## Parameters
+### train_*.py
+```
+--M          : Number of snapshots that will be taken. Optimal range is in between 4 - 8. Default is 5
+--nb_epoch   : Number of epochs to train the network. Default is 200
+--alpha_zero : Initial Learning Rate. Usually 0.1 or 0.2. Default is 0.1
+--model      : Type of model to train. Can be "wrn" for Wide ResNets or "dn" for DenseNet
+```
+
+### predict_*.py
+```
+--optimize   : Flag to optimize the ensemble weights. Set to 1 to optimize. Default is 0 (disabled)
+--num_tests  : Number of times the optimizations will be performed. Default is 20
+```
 
 # Performance
 - Single Best: Describes the performance of the single best model.
