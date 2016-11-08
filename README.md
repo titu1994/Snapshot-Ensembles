@@ -27,9 +27,9 @@ The technique is simple to implement in Keras, using a custom callback. These ca
 
 1. Download the 6 WRN-16-4 weights that are provided in the Release tab of the project and place them in the `weights` directory for CIFAR 10 or 100
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
-3. Run the `predict_cifar_10.py` script to make an ensemble prediction.
+3. Run the `predict_cifar_10.py` script to make an ensemble prediction. Make sure to edit the `OPTIMIZE` flag to False to just predict, or True to optimize the weights
 
-Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.79 % accuracy). You can comment the `prediction_weights[0] = 2` line, since that follows the original paper's methodology for ensemble prediction. However this reduces the accuracy of the model (92.77 %). The difference is minor, but still an improvement. 
+Note the difference on calculating only the predictions of the best model (92.70 % accuracy), and the weighted ensemble version of the Snapshots (92.79 % accuracy). The difference is minor, but still an improvement. 
 
 The improvement is minor due to the fact that the model is far smaller than the WRN-34-4 model, nor is it trained on the CIFAR-100 or Tiny ImageNet dataset. According to the paper, models trained on more complex datasets such as CIFAR 100 and Tiny ImageNet obtaines a greater boost from the ensemble model.
 
@@ -37,5 +37,6 @@ The improvement is minor due to the fact that the model is far smaller than the 
 
 - Keras
 - Theano (tested) / Tensorflow (not tested, weights not available but can be converted)
+- scipy
 - h5py
 - sklearn
