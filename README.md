@@ -25,7 +25,7 @@ The paper uses several models such as ResNet-101, Wide Residual Network and Dens
 
 The technique is simple to implement in Keras, using a custom callback. These callbacks can be built using the `SnapshotCallbackBuilder` class in `snapshot.py`. Other models can simply use this callback builder to other models to train them in a similar manner.
 
-1. Download the 6 WRN-16-4 weights that are provided in the Release tab of the project and place them in the `weights` directory
+1. Download the 6 WRN-16-4 weights that are provided in the Release tab of the project and place them in the `weights` directory for CIFAR 10 or 100
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
 3. Run the `predict_cifar_10.py` script to make an ensemble prediction.
 
