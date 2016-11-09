@@ -23,10 +23,12 @@ def conv1_block(input, k=1, dropout=0.0):
     channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 16 * k, else create convolution2d for this input
-    if init._keras_shape[1] != 16 * k:
-        init = Convolution2D(16 * k, 1, 1, activation='linear', border_mode='same')(init)
-    elif init._keras_shape[-1] != 16 * k:
-        init = Convolution2D(16 * k, 1, 1, activation='linear', border_mode='same')(init)
+    if K.image_dim_ordering() == "th":
+        if init._keras_shape[1] != 16 * k:
+            init = Convolution2D(16 * k, 1, 1, activation='linear', border_mode='same')(init)
+    else:
+        if init._keras_shape[-1] != 16 * k:
+            init = Convolution2D(16 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(16 * k, 3, 3, border_mode='same')(input)
     x = BatchNormalization(axis=channel_axis)(x)
@@ -47,10 +49,12 @@ def conv2_block(input, k=1, dropout=0.0):
     channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 32 * k, else create convolution2d for this input
-    if init._keras_shape[1] != 32 * k:
-        init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
-    elif init._keras_shape[-1] != 32 * k:
-        init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
+    if K.image_dim_ordering() == "th":
+        if init._keras_shape[1] != 32 * k:
+            init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
+    else:
+        if init._keras_shape[-1] != 32 * k:
+            init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(32 * k, 3, 3, border_mode='same')(input)
     x = BatchNormalization(axis=channel_axis)(x)
@@ -71,10 +75,12 @@ def conv3_block(input, k=1, dropout=0.0):
     channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 64 * k, else create convolution2d for this input
-    if init._keras_shape[1] != 64 * k:
-        init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
-    elif init._keras_shape[-1] != 64 * k:
-        init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
+    if K.image_dim_ordering() == "th":
+        if init._keras_shape[1] != 64 * k:
+            init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
+    else:
+        if init._keras_shape[-1] != 64 * k:
+            init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
 
     x = Convolution2D(64 * k, 3, 3, border_mode='same')(input)
     x = BatchNormalization(axis=channel_axis)(x)
