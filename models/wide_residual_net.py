@@ -7,16 +7,20 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooli
 from keras.layers.normalization import BatchNormalization
 from keras import backend as K
 
-channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
 def initial_conv(input):
     x = Convolution2D(16, 3, 3, border_mode='same')(input)
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
+
     x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
     return x
 
 def conv1_block(input, k=1, dropout=0.0):
     init = input
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 16 * k, else create convolution2d for this input
     if init._keras_shape[1] != 16 * k:
@@ -38,6 +42,8 @@ def conv1_block(input, k=1, dropout=0.0):
 def conv2_block(input, k=1, dropout=0.0):
     init = input
 
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
+
     # Check if input number of filters is same as 32 * k, else create convolution2d for this input
     if init._keras_shape[1] != 32 * k:
         init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
@@ -57,6 +63,8 @@ def conv2_block(input, k=1, dropout=0.0):
 
 def conv3_block(input, k=1, dropout=0.0):
     init = input
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 64 * k, else create convolution2d for this input
     if init._keras_shape[1] != 64 * k:
@@ -78,6 +86,7 @@ def conv3_block(input, k=1, dropout=0.0):
 def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, verbose=1):
     """
     Creates a Wide Residual Network with specified parameters
+
     :param input: Input Keras object
     :param nb_classes: Number of output classes
     :param N: Depth of the network. Compute N = (n - 4) / 6.
@@ -115,3 +124,17 @@ def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, v
 
     if verbose: print("Wide Residual Network-%d-%d created." % (nb_conv, k))
     return x
+
+if __name__ == "__main__":
+    from keras.utils.visualize_util import plot
+    from keras.layers import Input
+    from keras.models import Model
+
+    init = Input(shape=(3, 32, 32))
+
+    wrn_28_10 = create_wide_residual_network(init, nb_classes=100, N=4, k=10, dropout=0.25)
+
+    model = Model(init, wrn_28_10)
+
+    model.summary()
+    plot(model, "WRN-28-10.png", show_shapes=True, show_layer_names=True)

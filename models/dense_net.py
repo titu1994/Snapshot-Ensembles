@@ -1,3 +1,8 @@
+'''
+Code from my DenseNet repository : https://github.com/titu1994/DenseNet
+'''
+
+
 from keras.models import Model
 from keras.layers.core import Dense, Dropout, Activation
 from keras.layers.convolutional import Convolution2D
@@ -7,8 +12,6 @@ from keras.layers import Input, merge
 from keras.layers.normalization import BatchNormalization
 from keras.regularizers import l2
 import keras.backend as K
-
-concat_axis = 1 if K.image_dim_ordering() == "th" else -1
 
 def conv_block(ip, nb_filter, dropout_rate=None, weight_decay=1E-4):
     ''' Apply BatchNorm, Relu 3x3, Conv2D, optional dropout
@@ -22,6 +25,8 @@ def conv_block(ip, nb_filter, dropout_rate=None, weight_decay=1E-4):
     Returns: keras tensor with batch_norm, relu and convolution2d added
 
     '''
+
+    concat_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     x = BatchNormalization(mode=0, axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
@@ -46,6 +51,8 @@ def transition_block(ip, nb_filter, dropout_rate=None, weight_decay=1E-4):
     Returns: keras tensor, after applying batch_norm, relu-conv, dropout, maxpool
 
     '''
+
+    concat_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     x = BatchNormalization(mode=0, axis=concat_axis, gamma_regularizer=l2(weight_decay),
                            beta_regularizer=l2(weight_decay))(ip)
@@ -73,6 +80,8 @@ def dense_block(x, nb_layers, nb_filter, growth_rate, dropout_rate=None, weight_
     Returns: keras tensor with nb_layers of conv_block appended
 
     '''
+
+    concat_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     feature_list = [x]
 
@@ -104,6 +113,8 @@ def create_dense_net(nb_classes, img_dim, depth=40, nb_dense_block=1, growth_rat
     '''
 
     model_input = Input(shape=img_dim)
+
+    concat_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     assert (depth - 4) % 3 == 0, "Depth must be 3 N + 4"
 
