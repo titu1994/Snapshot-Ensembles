@@ -11,7 +11,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
 
 from snapshot import SnapshotCallbackBuilder
-from models import wide_residual_net as WRN, dense_net as dn
+from models import wide_residual_net as WRN, dense_net as DN
 
 parser = argparse.ArgumentParser(description='CIFAR 10 Ensemble Prediction')
 
@@ -19,6 +19,14 @@ parser.add_argument('--M', type=int, default=5, help='Number of snapshots')
 parser.add_argument('--nb_epoch', type=int, default=200, help='Number of training epochs')
 parser.add_argument('--alpha_zero', type=float, default=0.1, help='Initial learning rate')
 parser.add_argument('--model', type=str, default='wrn', help='Type of model to train')
+
+# Wide ResNet Parameters
+parser.add_argument('--wrn_N', type=int, default=2, help='Number of WRN blocks. Computed as N = (n - 4) / 6.')
+parser.add_argument('--wrn_k', type=int, default=4, help='Width factor of WRN')
+
+# DenseNet Parameters
+parser.add_argument('--dn_depth', type=int, default=40, help='Depth of DenseNet')
+parser.add_argument('--dn_growth_rate', type=int, default=12, help='Growth rate of DenseNet')
 
 args = parser.parse_args()
 
@@ -58,15 +66,15 @@ else:
     init = (img_rows, img_cols, 3)
 
 if model_type == "wrn":
-    wrn_model = WRN.create_wide_residual_network(init, nb_classes=100, N=2, k=4, dropout=0.00)
+    wrn_model = WRN.create_wide_residual_network(init, nb_classes=100, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
     model = Model(input=init, output=wrn_model)
 
-    model_prefix = 'WRN-CIFAR100-16-4'
+    model_prefix = 'WRN-CIFAR100-%d-%d' % (args.wrn_N * 6 + 4, args.wrn_k)
 else:
-    model = dn.create_dense_net(nb_classes=100, img_dim=init, depth=40, nb_dense_block=1,
-                                growth_rate=12, nb_filter=16, dropout_rate=0.2)
+    model = DN.create_dense_net(nb_classes=10, img_dim=init, depth=args.dn_depth, nb_dense_block=1,
+                                growth_rate=args.dn_growth_rate, nb_filter=16, dropout_rate=0.2)
 
-    model_prefix = 'DenseNet-CIFAR100-40-12'
+    model_prefix = 'DenseNet-CIFAR100-%d-%d' % (args.dn_depth, args.dn_growth_rate)
 
 model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")
