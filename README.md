@@ -34,6 +34,20 @@ Note the difference on calculating only the predictions of the best model (92.70
 The improvement is minor due to the fact that the model is far smaller than the WRN-34-4 model, nor is it trained on the CIFAR-100 or Tiny ImageNet dataset. According to the paper, models trained on more complex datasets such as CIFAR 100 and Tiny ImageNet obtaines a greater boost from the ensemble model.
 
 ## Parameters
+Some parameters for WRN models from the paper:
+- M = 5
+- nb_epoch = 200
+- alpha_zero = 0.1
+- wrn_N = 2 (WRN-16-4) or 4 (WRN-28-8)
+- wrn_k = 4 (WRN-16-4) or 8 (WRN-28-8)
+
+Some parameters for DenseNet models from the paper:
+- M = 6
+- nb_epoch = 300
+- alpha_zero = 0.2
+- dn_depth = 40 (DenseNet-40-12) or 100 (DenseNet-100-24)
+- dn_growth_rate = 12 (DenseNet-40-12) or 24 (DenseNet-100-24)
+
 ### train_*.py
 ```
 --M              : Number of snapshots that will be taken. Optimal range is in between 4 - 8. Default is 5
@@ -51,8 +65,12 @@ The improvement is minor due to the fact that the model is far smaller than the 
 
 ### predict_*.py
 ```
---optimize   : Flag to optimize the ensemble weights. Set to 1 to optimize. Default is 0 (disabled). Use -1 to perform non weighted accuracy calculation.
---num_tests  : Number of times the optimizations will be performed. Default is 20
+--optimize       : Flag to optimize the ensemble weights. 
+                   Default is 0 (Predict using optimized weights).
+                   Set to 1 to optimize ensemble weights (test for num_tests times).
+                   Set to -1 to predict using equal weights for all models (As given in the paper).
+               
+--num_tests      : Number of times the optimizations will be performed. Default is 20
 
 --model          : Type of model to train. Can be "wrn" for Wide ResNets or "dn" for DenseNet
 
