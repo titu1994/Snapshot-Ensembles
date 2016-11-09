@@ -58,15 +58,15 @@ else:
     init = (img_rows, img_cols, 3)
 
 if model_type == "wrn":
-    wrn_model = WRN.create_wide_residual_network(init, nb_classes=10, N=2, k=4, dropout=0.00)
+    wrn_model = WRN.create_wide_residual_network(init, nb_classes=100, N=2, k=4, dropout=0.00)
     model = Model(input=init, output=wrn_model)
 
-    model_prefix = 'WRN-CIFAR10-16-4'
+    model_prefix = 'WRN-CIFAR100-16-4'
 else:
-    model = dn.create_dense_net(nb_classes=10, img_dim=init, depth=40, nb_dense_block=1,
+    model = dn.create_dense_net(nb_classes=100, img_dim=init, depth=40, nb_dense_block=1,
                                 growth_rate=12, nb_filter=16, dropout_rate=0.2)
 
-    model_prefix = 'DenseNet-40-12'
+    model_prefix = 'DenseNet-CIFAR100-40-12'
 
 model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")

@@ -66,7 +66,7 @@ else:
     model = dn.create_dense_net(nb_classes=10, img_dim=init, depth=40, nb_dense_block=1,
                                 growth_rate=12, nb_filter=16, dropout_rate=0.2)
 
-    model_prefix = 'DenseNet-40-12'
+    model_prefix = 'DenseNet-CIFAR10-40-12'
 
 model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")
