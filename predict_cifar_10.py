@@ -166,7 +166,7 @@ for iteration in range(NUM_TESTS):
 print("Best Accuracy : ", best_acc)
 print("Best Weights : ", best_weights)
 
-with open('models/Ensemble weights %s.json' % model_prefix, mode='w') as f:
+with open('weights/Ensemble weights %s.json' % model_prefix, mode='w') as f:
     dictionary = {'best_weights' : best_weights.tolist()}
     json.dump(dictionary, f)
 
