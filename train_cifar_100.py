@@ -32,7 +32,7 @@ assert model_type in ['wrn', 'dn'], 'Model type must be one of "wrn" for Wide Re
 
 snapshot = SnapshotCallbackBuilder(T, M, alpha_zero)
 
-batch_size = 128
+batch_size = 128 if model_type == "wrn" else 64
 img_rows, img_cols = 32, 32
 
 (trainX, trainY), (testX, testY) = cifar100.load_data()
