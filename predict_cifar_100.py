@@ -101,7 +101,7 @@ for fn in models_filenames:
     print("Obtained predictions from model with weights = %s" % (fn))
 
 if OPTIMIZE == 0:
-    with open('weights/Ensemble weights %s CIFAR 100.json' % model_prefix, mode='r') as f:
+    with open('weights/Ensemble weights %s.json' % model_prefix, mode='r') as f:
         dictionary = json.load(f)
 
     prediction_weights = dictionary['best_weights']
@@ -166,7 +166,7 @@ for iteration in range(NUM_TESTS):
 print("Best Accuracy : ", best_acc)
 print("Best Weights : ", best_weights)
 
-with open('models/Ensemble weights %s CIFAR 100.json' % model_prefix, mode='w') as f:
+with open('models/Ensemble weights %s.json' % model_prefix, mode='w') as f:
     dictionary = {'best_weights' : best_weights.tolist()}
     json.dump(dictionary, f)
 
