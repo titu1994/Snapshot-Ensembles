@@ -15,7 +15,8 @@ import keras.utils.np_utils as kutils
 parser = argparse.ArgumentParser(description='CIFAR 100 Ensemble Prediction')
 
 parser.add_argument('--optimize', type=int, default=0, help='Optimization flag. Set to 1 to perform a randomized '
-                                                            'search to maximise classification accuracy')
+                                                            'search to maximise classification accuracy. \n'
+                                                            'Set to -1 to get non weighted classification accuracy')
 
 parser.add_argument('--num_tests', type=int, default=20, help='Number of tests to perform when optimizing the '
                                                               'ensemble weights for maximizing classification accuracy')
@@ -45,22 +46,23 @@ if model_type == "wrn":
     n = args.wrn_N * 6 + 4
     k = args.wrn_k
 
-    models_filenames = [r"weights/WRN-CIFAR10-%d-%d-Best.h5" % (n, k),
-                        r"weights/WRN-CIFAR10-%d-%d-1.h5" % (n, k),
-                        r"weights/WRN-CIFAR10-%d-%d-2.h5" % (n, k),
-                        r"weights/WRN-CIFAR10-%d-%d-3.h5" % (n, k),
-                        r"weights/WRN-CIFAR10-%d-%d-4.h5" % (n, k),
-                        r"weights/WRN-CIFAR10-%d-%d-5.h5" % (n, k)]
+    models_filenames = [r"weights/WRN-CIFAR100-%d-%d-Best.h5" % (n, k),
+                        r"weights/WRN-CIFAR100-%d-%d-1.h5" % (n, k),
+                        r"weights/WRN-CIFAR100-%d-%d-2.h5" % (n, k),
+                        r"weights/WRN-CIFAR100-%d-%d-3.h5" % (n, k),
+                        r"weights/WRN-CIFAR100-%d-%d-4.h5" % (n, k),
+                        r"weights/WRN-CIFAR100-%d-%d-5.h5" % (n, k)]
 else:
     depth = args.dn_depth
     growth_rate = args.dn_growth_rate
 
-    models_filenames = [r"weights/DenseNet-CIFAR10-%d-%d-Best.h5" % (depth, growth_rate),
-                        r"weights/DenseNet-CIFAR10-%d-%d-1.h5" % (depth, growth_rate),
-                        r"weights/DenseNet-CIFAR10-%d-%d-2.h5" % (depth, growth_rate),
-                        r"weights/DenseNet-CIFAR10-%d-%d-3.h5" % (depth, growth_rate),
-                        r"weights/DenseNet-CIFAR10-%d-%d-4.h5" % (depth, growth_rate),
-                        r"weights/DenseNet-CIFAR10-%d-%d-5.h5" % (depth, growth_rate)]
+    models_filenames = [r"weights/DenseNet-CIFAR100-%d-%d-Best.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-1.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-2.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-3.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-4.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-5.h5" % (depth, growth_rate),
+                        r"weights/DenseNet-CIFAR100-%d-%d-6.h5" % (depth, growth_rate)]
 
 (trainX, trainY), (testX, testY) = cifar100.load_data()
 nb_classes = len(np.unique(testY))
@@ -100,25 +102,30 @@ for fn in models_filenames:
 
     print("Obtained predictions from model with weights = %s" % (fn))
 
-if OPTIMIZE == 0:
-    with open('weights/Ensemble weights %s.json' % model_prefix, mode='r') as f:
-        dictionary = json.load(f)
 
-    prediction_weights = dictionary['best_weights']
-
+def calculate_weighted_accuracy():
+    global weighted_predictions, weight, prediction, yPred, yTrue, accuracy, error
     weighted_predictions = np.zeros((testX.shape[0], nb_classes), dtype='float32')
     for weight, prediction in zip(prediction_weights, preds):
         weighted_predictions += weight * prediction
-
     yPred = np.argmax(weighted_predictions, axis=1)
     yTrue = testY
-
     accuracy = metrics.accuracy_score(yTrue, yPred) * 100
     error = 100 - accuracy
     print("Accuracy : ", accuracy)
     print("Error : ", error)
-
     exit()
+
+
+if OPTIMIZE == 0:
+    with open('weights/Ensemble weights %s.json' % model_prefix, mode='r') as f:
+        dictionary = json.load(f)
+    prediction_weights = dictionary['best_weights']
+    calculate_weighted_accuracy()
+
+elif OPTIMIZE == -1:
+    prediction_weights = [1. / len(models_filenames)] * len(models_filenames)
+    calculate_weighted_accuracy()
 
 ''' OPTIMIZATION REGION '''
 

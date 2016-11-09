@@ -51,7 +51,7 @@ The improvement is minor due to the fact that the model is far smaller than the 
 
 ### predict_*.py
 ```
---optimize   : Flag to optimize the ensemble weights. Set to 1 to optimize. Default is 0 (disabled)
+--optimize   : Flag to optimize the ensemble weights. Set to 1 to optimize. Default is 0 (disabled). Use -1 to perform non weighted accuracy calculation.
 --num_tests  : Number of times the optimizations will be performed. Default is 20
 
 --model          : Type of model to train. Can be "wrn" for Wide ResNets or "dn" for DenseNet
