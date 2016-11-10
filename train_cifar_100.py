@@ -61,9 +61,15 @@ generator = ImageDataGenerator(rotation_range=15,
 generator.fit(trainX, seed=0, augment=True)
 
 if K.image_dim_ordering() == "th":
-    init = Input(shape=(3, img_rows, img_cols))
+    if model_type == "wrn":
+        init = Input(shape=(3, img_rows, img_cols))
+    else:
+        init = (3, img_rows, img_cols)
 else:
-    init = (img_rows, img_cols, 3)
+    if model_type == "wrn":
+        init = Input(shape=(img_rows, img_cols, 3))
+    else:
+        init = (img_rows, img_cols, 3)
 
 if model_type == "wrn":
     wrn_model = WRN.create_wide_residual_network(init, nb_classes=100, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
