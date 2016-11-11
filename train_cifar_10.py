@@ -5,7 +5,6 @@ import argparse
 
 import keras.utils.np_utils as kutils
 from keras.datasets import cifar10
-from keras.layers import Input
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
@@ -62,19 +61,12 @@ generator = ImageDataGenerator(rotation_range=15,
 generator.fit(trainX, seed=0, augment=True)
 
 if K.image_dim_ordering() == "th":
-    if model_type == "wrn":
-        init = Input(shape=(3, img_rows, img_cols))
-    else:
-        init = (3, img_rows, img_cols)
+    init = (3, img_rows, img_cols)
 else:
-    if model_type == "wrn":
-        init = Input(shape=(img_rows, img_cols, 3))
-    else:
-        init = (img_rows, img_cols, 3)
+    init = (img_rows, img_cols, 3)
 
 if model_type == "wrn":
-    wrn_model = WRN.create_wide_residual_network(init, nb_classes=10, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
-    model = Model(input=init, output=wrn_model)
+    model = WRN.create_wide_residual_network(init, nb_classes=10, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
 
     model_prefix = 'WRN-CIFAR10-%d-%d' % (args.wrn_N * 6 + 4, args.wrn_k)
 else:
