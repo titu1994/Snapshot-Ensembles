@@ -6,8 +6,6 @@ from scipy.optimize import minimize
 from sklearn.metrics import log_loss
 from models import wide_residual_net as WRN, dense_net as DN
 
-from keras.layers import Input
-from keras.models import Model
 from keras.datasets import cifar100
 from keras import backend as K
 import keras.utils.np_utils as kutils
@@ -76,13 +74,12 @@ trainY = kutils.to_categorical(trainY)
 testY_cat = kutils.to_categorical(testY)
 
 if K.image_dim_ordering() == "th":
-    init = Input(shape=(3, 32, 32))
+    init = (3, 32, 32)
 else:
     init = (32, 32, 3)
 
 if model_type == "wrn":
-    wrn_model = WRN.create_wide_residual_network(init, nb_classes=100, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
-    model = Model(input=init, output=wrn_model)
+    model = WRN.create_wide_residual_network(init, nb_classes=100, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
 
     model_prefix = 'WRN-CIFAR100-%d-%d' % (args.wrn_N * 6 + 4, args.wrn_k)
 else:
