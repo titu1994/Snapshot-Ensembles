@@ -2,7 +2,7 @@
 Code from my Wide Residual Network repository : https://github.com/titu1994/Wide-Residual-Networks
 '''
 
-from keras.layers import merge, Activation, Dropout, Flatten, Dense
+from keras.layers import Input, merge, Activation, Dropout, Flatten, Dense
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.layers.normalization import BatchNormalization
 from keras import backend as K
