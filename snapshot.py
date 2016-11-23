@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 import keras.callbacks as callbacks
 from keras.callbacks import Callback
@@ -26,6 +27,9 @@ class SnapshotCallbackBuilder:
         self.alpha_zero = alpha_zero
 
     def get_callbacks(self, model_prefix='Model'):
+        if not os.path.exists('weights/'):
+            os.makedirs('weights/')
+
         callback_list = [callbacks.ModelCheckpoint("weights/%s-Best.h5" % model_prefix, monitor="val_acc",
                                                     save_best_only=True, save_weights_only=True),
                          callbacks.LearningRateScheduler(schedule=self._cosine_anneal_schedule),
