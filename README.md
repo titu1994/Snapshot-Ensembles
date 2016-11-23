@@ -35,14 +35,13 @@ alpha_zero = 0.1 # initial learning rate
 model_prefix = 'Model_'
 
 snapshot = SnapshotCallbackBuilder(T, M, alpha_zero) 
-
-
 ...
 model = Sequential() OR model = Model(ip, output) # Some model that has been compiled
 
 model.fit(trainX, trainY, callbacks=snapshot.get_callbacks(model_prefix=model_prefix))
-
 ```
+
+To train WRN or DenseNet models on CIFAR 10 or 100 (or use pre trained models):
 
 1. Download the 6 WRN-16-4 weights that are provided in the Release tab of the project and place them in the `weights` directory for CIFAR 10 or 100
 2. Run the `train_cifar_10.py` script to train the WRN-16-4 model on CIFAR-10 dataset (not required since weights are provided)
