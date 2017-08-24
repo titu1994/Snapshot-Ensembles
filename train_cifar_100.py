@@ -2,6 +2,7 @@ import json
 import numpy as np
 import sklearn.metrics as metrics
 import argparse
+import os
 
 import keras.utils.np_utils as kutils
 from keras.datasets import cifar100
@@ -65,15 +66,18 @@ if K.image_dim_ordering() == "th":
 else:
     init = (img_rows, img_cols, 3)
 
+if not os.path.exists('weights/'):
+    os.makedirs('weights/')
+
 if model_type == "wrn":
     model = WRN.create_wide_residual_network(init, nb_classes=100, N=args.wrn_N, k=args.wrn_k, dropout=0.00)
 
-    model_prefix = 'WRN-CIFAR100-%d-%d' % (args.wrn_N * 6 + 4, args.wrn_k)
+    model_prefix = 'weights/WRN-CIFAR100-%d-%d' % (args.wrn_N * 6 + 4, args.wrn_k)
 else:
     model = DN.create_dense_net(nb_classes=100, img_dim=init, depth=args.dn_depth, nb_dense_block=1,
                                 growth_rate=args.dn_growth_rate, nb_filter=16, dropout_rate=0.2)
 
-    model_prefix = 'DenseNet-CIFAR100-%d-%d' % (args.dn_depth, args.dn_growth_rate)
+    model_prefix = 'weights/DenseNet-CIFAR100-%d-%d' % (args.dn_depth, args.dn_growth_rate)
 
 model.compile(loss="categorical_crossentropy", optimizer="sgd", metrics=["acc"])
 print("Finished compiling")

@@ -70,7 +70,7 @@ trainX /= 255.0
 testX = testX.astype('float32')
 testX /= 255.0
 
-trainY = kutils.to_categorical(trainY)
+trainY_cat = kutils.to_categorical(trainY)
 testY_cat = kutils.to_categorical(testY)
 
 if K.image_dim_ordering() == "th":
@@ -91,19 +91,25 @@ else:
 best_acc = 0.0
 best_weights = None
 
-preds = []
+train_preds = []
 for fn in models_filenames:
     model.load_weights(fn)
-    yPreds = model.predict(testX, batch_size=128)
-    preds.append(yPreds)
+    print("Predicting train set values on model %s" % (fn))
+    yPreds = model.predict(trainX, batch_size=128, verbose=2)
+    train_preds.append(yPreds)
 
-    print("Obtained predictions from model with weights = %s" % (fn))
+test_preds = []
+for fn in models_filenames:
+    model.load_weights(fn)
+    print("Predicting test set values on model %s" % (fn))
+    yPreds = model.predict(testX, batch_size=128, verbose=2)
+    test_preds.append(yPreds)
 
 
 def calculate_weighted_accuracy():
     global weighted_predictions, weight, prediction, yPred, yTrue, accuracy, error
     weighted_predictions = np.zeros((testX.shape[0], nb_classes), dtype='float32')
-    for weight, prediction in zip(prediction_weights, preds):
+    for weight, prediction in zip(prediction_weights, test_preds):
         weighted_predictions += weight * prediction
     yPred = np.argmax(weighted_predictions, axis=1)
     yTrue = testY
@@ -131,18 +137,19 @@ print()
 
 def log_loss_func(weights):
     ''' scipy minimize will pass the weights as a numpy array '''
-    final_prediction = np.zeros((testX.shape[0], nb_classes), dtype='float32')
+    final_prediction = np.zeros((trainX.shape[0], nb_classes), dtype='float32')
 
-    for weight, prediction in zip(weights, preds):
+    for weight, prediction in zip(weights, train_preds):
         final_prediction += weight * prediction
 
-    return log_loss(testY_cat, final_prediction)
+    return log_loss(trainY_cat, final_prediction)
+
 
 for iteration in range(NUM_TESTS):
     prediction_weights = np.random.random(len(models_filenames))
 
     constraints = ({'type': 'eq', 'fun':lambda w: 1 - sum(w)})
-    bounds = [(0, 1)] * len(preds)
+    bounds = [(0, 1)] * len(train_preds)
 
     result = minimize(log_loss_func, prediction_weights, method='SLSQP', bounds=bounds, constraints=constraints)
 
@@ -151,7 +158,7 @@ for iteration in range(NUM_TESTS):
     weights = result['x']
     weighted_predictions = np.zeros((testX.shape[0], nb_classes), dtype='float32')
 
-    for weight, prediction in zip(weights, preds):
+    for weight, prediction in zip(weights, test_preds):
         weighted_predictions += weight * prediction
 
     yPred = np.argmax(weighted_predictions, axis=1)
